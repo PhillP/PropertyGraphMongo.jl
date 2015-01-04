@@ -6,6 +6,8 @@ type PersistenceOperationResult{T}
 	successfulset::Set{T}
 	failedset::Set{T}
 
+	lastitemattempted::T
+
 	errormessage::String
 
 	function PersistenceOperationResult()

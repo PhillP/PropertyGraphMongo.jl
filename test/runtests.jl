@@ -25,6 +25,7 @@ try
 		println("running $(testfilepath) ...")
 		include(testfilepath)
 	end
+
 finally
 	kill(mongod)
 	rm(mongoDBDir, recursive=true)

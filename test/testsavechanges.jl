@@ -14,7 +14,7 @@ function savetest()
 	g.tracker = ChangeTracker()
 
 	# create a vertex and add it to the graph
-	fred = add!(g, Vertex("Person", @compat Dict{String,Any}("name"=>"Fred","age"=>45)))
+	fred = add!(g, Vertex("Person", @compat Dict{String,Any}("name"=>"Fred","age"=>45,"other"=>50)))
 
 	# make some more vertices
 	sally = add!(g, Vertex("Person", @compat Dict{String,Any}("name"=>"Sally","age"=>25)))
@@ -38,8 +38,30 @@ function savetest()
 
 	s = MongoStore(g)
 
-	return persist(s)
-end
-result = savetest()
-@test result.issuccessful == true
+	result = persist(s)
 
+	@test result.insertverticesresult.issuccessful == true
+	@test result.insertedgesresult.issuccessful == true
+	@test result.issuccessful == true
+
+	setpropertyvalues!(fred, @compat Dict{String,Any}("other"=>101,"new"=>"new value"))
+	setpropertyvalues!(e2, @compat Dict{String,Any}("since"=>2003))
+
+	result = persist(s)
+
+	@test result.updateverticesresult.issuccessful == true
+	@test result.updateedgesresult.issuccessful == true
+	@test result.issuccessful == true
+
+	remove!(g, e)
+	remove!(g, johan)
+
+	result = persist(s)
+
+	@test result.removeverticesresult.issuccessful == true
+	@test result.removeedgesresult.issuccessful == true
+	@test result.issuccessful == true
+
+end
+
+savetest()
